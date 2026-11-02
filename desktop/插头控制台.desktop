@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Tasmota 插头控制台
+Comment=检测连接、控制开关、显示读数
+Exec=/usr/bin/python3 /home/sam/WorkBuddy/2026-11-02-09-58-25/tasmota/desktop/app.py
+Path=/home/sam/WorkBuddy/2026-11-02-09-58-25/tasmota/desktop
+Icon=utilities-system-monitor
+Terminal=false
+Categories=Utility;Electronics;

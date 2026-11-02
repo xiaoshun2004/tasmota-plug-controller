@@ -1,0 +1,11 @@
+# 临时产物
+*.png
+*.jpg
+*.log
+
+# Python
+__pycache__/
+*.pyc
+
+# 系统
+.DS_Store

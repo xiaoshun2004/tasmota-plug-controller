@@ -1,0 +1,67 @@
+智能插头使用说明
+
+▍怎么控制
+先确认你和插头在同一个内网：看自己的 IP 是不是 192.168.3. 开头。
+连 RobotStore 或 RobotStore_5G 都行——插头自己只连 2.4G，
+但你的电脑手机走 5G 也能控它，同一个内网就通。
+然后浏览器打开：
+http://192.168.3.46/
+页面上的 Toggle 按钮就是开/关，下面有电压功率读数。
+手机连同一个 Wi-Fi 输同样地址，一样用。不用装任何东西。
+
+会敲命令的话：
+curl "http://192.168.3.46/cm?cmnd=Power%20On"      开
+curl "http://192.168.3.46/cm?cmnd=Power%20Off"     关
+curl "http://192.168.3.46/cm?cmnd=Power"           查状态
+
+▍定时开关（网页上点，不用敲命令）
+打开 http://192.168.3.46/tm
+1. 勾上 Enable Timers（这个总开关默认关着，不勾不生效）
+2. 每行选 时间 / 星期几 / Action(On开、Off关)
+3. 点 Save Configuration
+定时存在插头里，电脑关机照跑。
+
+▍几个常用地址（都是 192.168.3.46 后面加）
+/        主菜单，有开关按钮
+/cn      配置菜单
+/tm      定时器
+/wi      配置 Wi-Fi
+/cs      命令行控制台
+/in      设备信息
+
+▍想写脚本、加功能，去哪查
+它跑的是 Tasmota 固件，官方文档很全（英文）：
+· 所有命令       https://tasmota.github.io/docs/Commands/
+· HTTP 接口      https://tasmota.github.io/docs/API/
+· 定时           https://tasmota.github.io/docs/Timers/
+· 条件触发       https://tasmota.github.io/docs/Rules/
+· 接 Home Assistant  https://tasmota.github.io/docs/MQTT/
+· 写脚本(Berry)  https://tasmota.github.io/docs/Berry/
+· 配网刷机升级   https://tasmota.github.io/docs/Getting-Started/
+
+技巧：别翻文档猜命令，直接开 http://192.168.3.46/cs
+这是它的 Console，敲命令立刻有返回，错了会提示 Unknown。
+
+▍换到别的网络怎么办（联调前看这段）
+推荐做法：加一个"备用网络"，原来的 RobotStore 不动。
+打开 http://192.168.3.46/wi
+· WiFi Network 那栏已填 RobotStore，不要改
+· 往下找到 Alternative WiFi Network，填你要去的新网络名
+· 旁边填它的密码
+· 点 Save，设备重启
+这样两边都能连：在 RobotStore 就连主网络，去别的网络自动连备用。
+清掉备用网络：curl "http://192.168.3.46/cm?cmnd=SSId2%200"
+
+不要直接改 WiFi Network 那一栏。设备现在连不上时不会自己开热点，
+SSID 或密码填错就只能拆机接串口重刷，远程救不回来。
+真要改请先跟 Sam 说一声。
+另外这插头只认 2.4G，不认 5G；密码不能有空格和特殊符号。
+
+▍注意
+· IP 是路由器分配的，但一直在线就会一直续租同一个地址，平时不用管。
+  打不开先 ping 192.168.3.46；如果把它拿到别的网络，IP 一定会变，
+  去那台路由器后台找主机名 cozylife-936340-0832 或 MAC <MAC>。
+  别把地址写死进设备，接到别的网段会彻底失联、只能拆机。
+· 没有密码，谁在这个网里都能控，别暴露到公网
+· 上限 10A / 2200W，接电机水泵要留余量
+· 电压功率读数没校准（显示 300V 上下），只当参考，不影响开关
